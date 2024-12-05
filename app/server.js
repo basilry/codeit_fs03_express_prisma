@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const session = require('express-session');
 
 const app = express();
 const PORT = 3080;
@@ -11,7 +12,21 @@ app.use(cors({
     credentials: true, // 쿠키 및 인증 정보 포함 허용
 }));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({extended: true}));
+
+app.use(
+    session({
+        secret: "mySecret",
+        resave: false,
+        saveUninitialized: true,
+        cookie: {
+            httpOnly: true,
+            secure: false,
+            sameSite: "lax",
+        },
+    })
+);
+
 
 // todoList 라우터 기능 추가
 const todoListRouter = require('./routes/todoListRouter');
